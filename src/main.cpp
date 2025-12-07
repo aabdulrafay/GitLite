@@ -36,8 +36,9 @@ int main(int argc, char* argv[]) {
     else if (cmd == "diff" && argc >= 3) {
         diffFile(argv[2]);
     }
-    else if (cmd == "parallel-add" && argc >= 3) {
-        parallelAdd(argv[2]);
+    // Changed command logic
+    else if (cmd == "bulk-add" && argc >= 3) {
+        bulkAdd(argv[2]);
     }
     else {
         cout << "❌ Unknown command or missing arguments" << endl;

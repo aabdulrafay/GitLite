@@ -1,11 +1,12 @@
 CXX = g++
-# CXXFLAGS: Fixed -02 to the correct optimization flag -O2
-CXXFLAGS = -std=c++17 -Wall -pthread -O2
+# CXXFLAGS: Removed -pthread
+CXXFLAGS = -std=c++17 -Wall -O2
 TARGET = build/gitlite
-SRC = src/*.cpp
+# Exclude thread_pool.cpp from source list if you haven't deleted the file yet
+SRC = src/main.cpp src/buffer_manager.cpp src/commit.cpp src/diff.cpp src/filesystem.cpp src/hashing.cpp src/ipc_handler.cpp src/proess_manager.cpp
 
 all:
-	@echo "📦 Starting GitLite Build..."
+	@echo "📦 Starting GitLite Build (Sequential)..."
 	mkdir -p build
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
 	@echo "✅ Build complete: $(TARGET)"

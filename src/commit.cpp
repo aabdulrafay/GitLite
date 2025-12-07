@@ -3,7 +3,7 @@
 #include "hashing.h"
 #include "diff.h"
 #include "buffer_manager.h"
-#include "thread_pool.h"
+// #include "thread_pool.h"  <-- REMOVED
 #include <iostream>
 #include <filesystem>
 #include <ctime>
@@ -29,14 +29,14 @@ string timestamp() {
 void initRepo() {
     cout << "Setting up repository structure..." << endl;
     
-    // 🚩 CRITICAL FIX: Must create the root directory (.gitlite) first!
+    // Create the root directory (.gitlite) first
     FileSystem::createDir(repo); 
 
-    // Now create the subdirectories inside the established root
+    // Create subdirectories
     FileSystem::createDir(objects);
     FileSystem::createDir(commits);
     
-    // Now the files will be written successfully inside the existing .gitlite folder
+    // Initialize files
     FileSystem::writeFile(indexFile, "");
     FileSystem::writeFile(headFile, "none");
     FileSystem::writeFile(logFile, "");
@@ -189,27 +189,22 @@ void diffFile(const string &file) {
     runDiff(oldFile, file);
 }
 
-void parallelAdd(const string &directory) {
+// 🚩 CHANGED: Renamed to bulkAdd and removed ThreadPool logic
+void bulkAdd(const string &directory) {
     if (!FileSystem::fileExists(directory)) {
         cout << "❌ Directory not found: " << directory << endl;
         return;
     }
 
-    cout << "🚀 Starting parallel add operation..." << endl;
+    cout << "🚀 Starting bulk add operation (Sequential)..." << endl;
     
-    // Create a Thread Pool with 4 worker threads
-    ThreadPool pool(4); 
+    // No ThreadPool here. Just a simple loop.
     vector<string> files = FileSystem::listFiles(directory);
 
     for (const string &file : files) {
-        // Enqueue addFile task for each file
-        pool.enqueue([file, directory]() {
-            string fullPath = directory + "/" + file;
-            addFile(fullPath);
-        });
+        string fullPath = directory + "/" + file;
+        addFile(fullPath); // Call directly on main thread
     }
 
-    // Wait for all threads to complete their tasks
-    pool.wait();
-    cout << "✅ Parallel add completed!" << endl;
+    cout << "✅ Bulk add completed!" << endl;
 }

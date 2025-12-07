@@ -10,6 +10,6 @@ void showLog();
 void showStatus();
 void restoreFile(const std::string &file);
 void diffFile(const std::string &file);
-void parallelAdd(const std::string &directory);
+void bulkAdd(const std::string &directory); // Renamed from parallelAdd
 
 #endif
